@@ -40,7 +40,7 @@ abstract class BaseFilters
     /**
      * @return string
      */
-    protected function dayFormat()
+    public function dayFormat() : string
     {
         if ((int) $this->day < 10) {
             $this->day = '0'.(int) $this->day;
@@ -52,7 +52,7 @@ abstract class BaseFilters
     /**
      * @return string
      */
-    protected function getCentralFilter()
+    public function getCentralFilter() : string
     {
         if ($this->taxId != '') {
             return 'RdoFolioFiscal';
@@ -66,7 +66,7 @@ abstract class BaseFilters
      *
      * @return string
      */
-    public function converterSecondsToHours($pSecStart)
+    public function converterSecondsToHours(int $pSecStart) : string
     {
         $segStart = $pSecStart - 1;
         $hours = (int) floor($segStart / 3600);
@@ -81,7 +81,7 @@ abstract class BaseFilters
      *
      * @return string
      */
-    public function converterHoursToSeconds($hour)
+    public function converterHoursToSeconds(int $hour) : string
     {
         list($hours, $minutes, $seconds) = explode(':', $hour);
         $hour_in_seconds = ($hours * 3600) + ($minutes * 60) + $seconds + 1;
@@ -94,7 +94,7 @@ abstract class BaseFilters
      *
      * @return string
      */
-    protected function formatNumber($num)
+    public function formatNumber(int $num) : string
     {
         if ((int) $num < 10) {
             $num = '0'.$num;
@@ -108,7 +108,7 @@ abstract class BaseFilters
      *
      * @return int
      */
-    protected function formatNumberInt($num)
+    public function formatNumberInt($num) : int
     {
         return (int) $num;
     }

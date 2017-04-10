@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 class Headers
@@ -10,7 +12,7 @@ class Headers
      *
      * @return array
      */
-    public static function post($host, $referer)
+    public static function post(string $host, string $referer) : array
     {
         return [
             'Accept' => ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -30,7 +32,7 @@ class Headers
      *
      * @return array
      */
-    public static function postAjax($host, $referer)
+    public static function postAjax(string $host, string $referer) : array
     {
         return [
             'Accept' => ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

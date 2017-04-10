@@ -19,12 +19,12 @@ interface Filters
      *
      * @return mixed
      */
-    public function converterHoursToSeconds($hour);
+    public function converterHoursToSeconds(int $hour);
 
     /**
      * @param int $pSecStart
      *
      * @return mixed
      */
-    public function converterSecondsToHours($pSecStart);
+    public function converterSecondsToHours(int $pSecStart);
 }

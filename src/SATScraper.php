@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 use Blacktrue\Scraping\Contracts\Filters;
@@ -17,7 +19,6 @@ class SATScraper
 {
     const SAT_CREDENTIAL_ERROR = 'El RFC o CIEC son incorrectos';
     const SAT_URL_LOGIN = 'https://cfdiau.sat.gob.mx/nidp/app/login?id=mat-ptsc-totp&sid=0&option=credential';
-    const SAT_URL_CAPTCHA = 'https://cfdiau.sat.gob.mx/nidp/jcaptcha.jpg';
     const SAT_HOST_CFDI_AUTH = 'cfdiau.sat.gob.mx';
     const SAT_HOST_PORTAL_CFDI = 'portalcfdi.facturaelectronica.sat.gob.mx';
     const SAT_URL_PORTAL_CFDI = 'https://portalcfdi.facturaelectronica.sat.gob.mx/';
@@ -109,7 +110,7 @@ class SATScraper
      *
      * @throws SATException
      */
-    private function login()
+    private function login(): string
     {
         $response = $this->client->post(self::SAT_URL_LOGIN, [
             'future' => true,
@@ -137,7 +138,7 @@ class SATScraper
     /**
      * @return array
      */
-    public function dataAuth()
+    public function dataAuth(): array
     {
         $response = $this->client->get(self::SAT_URL_PORTAL_CFDI, [
             'future' => true,
@@ -154,7 +155,7 @@ class SATScraper
      *
      * @return array
      */
-    public function postDataAuth(array $inputs)
+    public function postDataAuth(array $inputs) : array
     {
         $response = $this->client->post(self::SAT_URL_WSFEDERATION, [
             'future' => true,
@@ -172,7 +173,7 @@ class SATScraper
      *
      * @return array
      */
-    public function start(array $inputs = [])
+    public function start(array $inputs = []) : array
     {
         $response = $this->client->post(self::SAT_URL_PORTAL_CFDI, [
             'future' => true,
@@ -190,7 +191,7 @@ class SATScraper
      *
      * @return string
      */
-    public function selectType(array $inputs)
+    public function selectType(array $inputs) : string
     {
         $rdoTipoBusqueda = 'RdoTipoBusquedaReceptor';
         if ($this->tipoDescarga == 'emitidos') {
@@ -254,7 +255,7 @@ class SATScraper
      *
      * @throws SATException
      */
-    public function downloadPeriod($startYear, $startMonth, $startDay, $endYear, $endMonth, $endDay)
+    public function downloadPeriod(int $startYear, int $startMonth, int $startDay, int $endYear, int $endMonth, int $endDay)
     {
         if ($endYear >= $startYear && $endMonth >= $startMonth) {
             $dateCurrent = strtotime($startDay.'-'.$startMonth.'-'.$startYear.'00:00:00');
@@ -280,7 +281,7 @@ class SATScraper
      * @param int $month
      * @param int $day
      */
-    protected function downloadDay($year, $month, $day)
+    protected function downloadDay(int $year, int $month, int $day)
     {
         $secondInitial = 1;
         $secondEnd = 86400;
@@ -336,7 +337,7 @@ class SATScraper
      *
      * @return int
      */
-    protected function downloadSeconds($year, $month, $day, $startSec, $endSec)
+    protected function downloadSeconds(int $year, int $month, int $day, int $startSec, int $endSec) : int
     {
         $filters = new FiltersReceived();
         if ($this->tipoDescarga == 'emitidos') {
@@ -376,7 +377,7 @@ class SATScraper
      *
      * @return string
      */
-    protected function runQueryDate(Filters $filters)
+    protected function runQueryDate(Filters $filters) : string
     {
         if ($this->tipoDescarga == 'emitidos') {
             $url = self::SAT_URL_PORTAL_CFDI_CONSULTA_EMISOR;
@@ -410,7 +411,7 @@ class SATScraper
      *
      * @return array
      */
-    protected function enterQueryReceiver(Filters $filters)
+    protected function enterQueryReceiver(Filters $filters) : array
     {
         $response = $this->client->get(self::SAT_URL_PORTAL_CFDI_CONSULTA_RECEPTOR, [
             'future' => true,
@@ -445,7 +446,7 @@ class SATScraper
      *
      * @return array
      */
-    protected function enterQueryTransmitter(Filters $filters)
+    protected function enterQueryTransmitter(Filters $filters) : array
     {
         $response = $this->client->get(self::SAT_URL_PORTAL_CFDI_CONSULTA_EMISOR, [
             'future' => true,
@@ -482,7 +483,7 @@ class SATScraper
      *
      * @return array
      */
-    protected function getSearchValues($html, array $inputs, Filters $filters)
+    protected function getSearchValues(string $html, array $inputs, Filters $filters) : array
     {
         $parser = new ParserFormatSAT($html);
         $valuesChange = $parser->getFormValues();
@@ -497,7 +498,7 @@ class SATScraper
      *
      * @return array
      */
-    protected function parseInputs($html)
+    protected function parseInputs(string $html): array
     {
         $htmlForm = new HtmlForm($html, 'form');
         $inputs = $htmlForm->getFormValues();
@@ -510,7 +511,7 @@ class SATScraper
      *
      * @return int
      */
-    protected function makeData($html)
+    protected function makeData(string $html) : int
     {
         $dom = HtmlDomParser::str_get_html($html);
         $elems = $dom->find('#DivContenedor div table tr');
@@ -548,7 +549,7 @@ class SATScraper
     /**
      * @return CookieJar
      */
-    public function getCookie()
+    public function getCookie() : CookieJar
     {
         return $this->cookie;
     }
@@ -556,7 +557,7 @@ class SATScraper
     /**
      * @return Client
      */
-    public function getClient()
+    public function getClient() : Client
     {
         return $this->client;
     }
@@ -564,11 +565,11 @@ class SATScraper
     /**
      * @return array
      */
-    public function getRequests()
+    public function getRequests() : array
     {
         $requests = [];
         foreach ($this->getData() as $uuid => $data) {
-            if ($data['urlXml'] !== 'CANCELADO') {
+            if ($data['urlXml'] != 'CANCELADO') {
                 $requests[] = $data['urlXml'];
             }
         }
@@ -579,7 +580,7 @@ class SATScraper
     /**
      * @return array
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }

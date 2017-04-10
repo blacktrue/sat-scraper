@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 /**
@@ -18,7 +20,7 @@ class ParserFormatSAT
      *
      * @param $source
      */
-    public function __construct($source)
+    public function __construct(string $source)
     {
         $this->source = $source;
         $this->values = [];
@@ -48,7 +50,7 @@ class ParserFormatSAT
     /**
      * @return array
      */
-    public function getFormValues()
+    public function getFormValues() : array
     {
         $this->process();
         $this->orderValues();

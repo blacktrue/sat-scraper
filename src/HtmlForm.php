@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 use DOMDocument;
@@ -15,7 +17,7 @@ class HtmlForm
      * @param string $htmlSource
      * @param string $xpathForm
      */
-    public function __construct($htmlSource, $xpathForm)
+    public function __construct(string $htmlSource, string $xpathForm)
     {
         $this->xpathForm = $xpathForm;
         $this->htmlSource = $htmlSource;
@@ -24,10 +26,10 @@ class HtmlForm
     /**
      * @return array
      */
-    public function getFormValues()
+    public function getFormValues() : array
     {
-        $inputValues = $this->readInputValues();
-        $selectValues = $this->readSelectValues();
+        $inputValues = $this->readInputValues();     //OK
+        $selectValues = $this->readSelectValues();    //OK
 
         $values = array_merge($inputValues, $selectValues);
 
@@ -37,7 +39,7 @@ class HtmlForm
     /**
      * @return array
      */
-    public function readInputValues()
+    public function readInputValues() : array
     {
         return $this->readAndGetValues('input');
     }
@@ -45,7 +47,7 @@ class HtmlForm
     /**
      * @return array
      */
-    public function readSelectValues()
+    public function readSelectValues() : array
     {
         return $this->readAndGetValues('select');
     }
@@ -55,7 +57,7 @@ class HtmlForm
      *
      * @return array
      */
-    public function readAndGetValues($element)
+    public function readAndGetValues($element) : array
     {
         $old = libxml_use_internal_errors(true);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 use Blacktrue\Scraping\Contracts\Filters;
@@ -20,7 +22,7 @@ class FiltersReceived extends BaseFilters implements Filters
     /**
      * @return array
      */
-    public function getPost()
+    public function getPost() : array
     {
         $post = [];
         $post['__ASYNCPOST'] = 'true';
@@ -51,7 +53,7 @@ class FiltersReceived extends BaseFilters implements Filters
     /**
      * @return array
      */
-    public function getFormPostDates()
+    public function getFormPostDates() : array
     {
         $post = [];
         $post['__ASYNCPOST'] = 'true';

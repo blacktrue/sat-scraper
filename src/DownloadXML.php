@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Blacktrue\Scraping;
 
 use Closure;
@@ -34,7 +36,15 @@ class DownloadXML
      */
     public function download(Closure $callback)
     {
-        $promises = $this->makePromises();
+        $promises = (function () {
+            foreach ($this->satScraper->getRequests() as $link) {
+                yield $this->satScraper->getClient()->requestAsync('GET', $link, [
+                    'future' => true,
+                    'verify' => false,
+                    'cookies' => $this->satScraper->getCookie(),
+                ]);
+            }
+        })();
 
         (new EachPromise($promises, [
             'concurrency' => $this->concurrency,
@@ -46,25 +56,11 @@ class DownloadXML
     }
 
     /**
-     * @return \Generator
-     */
-    protected function makePromises()
-    {
-        foreach ($this->satScraper->getRequests() as $link) {
-            yield $this->satScraper->getClient()->requestAsync('GET', $link, [
-                'future' => true,
-                'verify' => false,
-                'cookies' => $this->satScraper->getCookie(),
-            ]);
-        }
-    }
-
-    /**
      * @param ResponseInterface $response
      *
      * @return string
      */
-    protected function getFileName(ResponseInterface $response)
+    protected function getFileName(ResponseInterface $response) : string
     {
         $contentDisposition = $response->getHeaderLine('content-disposition');
         $partsOfContentDisposition = explode(';', $contentDisposition);
@@ -78,7 +74,7 @@ class DownloadXML
      *
      * @return DownloadXML
      */
-    public function setSatScraper(SATScraper $satScraper)
+    public function setSatScraper(SATScraper $satScraper) : DownloadXML
     {
         $this->satScraper = $satScraper;
 
@@ -90,7 +86,7 @@ class DownloadXML
      *
      * @return DownloadXML
      */
-    public function setConcurrency($concurrency)
+    public function setConcurrency(int $concurrency) : DownloadXML
     {
         $this->concurrency = $concurrency;
 
