@@ -1,0 +1,22 @@
+{
+    "name": "blacktrue/sat-scraper",
+    "type": "library",
+    "description": "Web Scraping para extraer facturas electronicas masivamente desde la pagina del SAT",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cesar Aguilera",
+            "email": "cesargnu29@gmail.com"
+        }
+    ],
+    "require": {
+        "php" : ">=5.6",
+        "guzzlehttp/guzzle": "^6.2",
+        "sunra/php-simple-html-dom-parser": "^1.5"
+    },
+    "autoload":{
+        "psr-4":{
+            "Blacktrue\\Scraping\\" : "src"
+        }
+    }
+}
