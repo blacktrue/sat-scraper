@@ -128,7 +128,7 @@ class SATScraper
             ],
         ])->getBody()->getContents();
 
-        if (strpos($response, 'Ecom_Password') !== false) {
+        if (strpos($response, '<META HTTP-EQUIV="expires" CONTENT="0">') === false) {
             throw new SATException(self::SAT_CREDENTIAL_ERROR);
         }
 
