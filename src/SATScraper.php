@@ -18,7 +18,7 @@ define('MAX_FILE_SIZE', 1000000000000);
 class SATScraper
 {
     const SAT_CREDENTIAL_ERROR = 'El RFC o CIEC son incorrectos';
-    const SAT_URL_LOGIN = 'https://cfdiau.sat.gob.mx/nidp/app/login?id=mat-ptsc-totp&sid=0&option=credential';
+    const SAT_URL_LOGIN = 'https://cfdiau.sat.gob.mx//nidp/app/login?id=20&sid=1&option=credential&sid=1';
     const SAT_HOST_CFDI_AUTH = 'cfdiau.sat.gob.mx';
     const SAT_HOST_PORTAL_CFDI = 'portalcfdi.facturaelectronica.sat.gob.mx';
     const SAT_URL_PORTAL_CFDI = 'https://portalcfdi.facturaelectronica.sat.gob.mx/';
