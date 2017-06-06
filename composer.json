@@ -12,7 +12,8 @@
     "require": {
         "php" : ">=7.0",
         "guzzlehttp/guzzle": "^6.2",
-        "sunra/php-simple-html-dom-parser": "^1.5"
+        "sunra/php-simple-html-dom-parser": "^1.5",
+        "phpunit/phpunit": "^6.2"
     },
     "autoload":{
         "psr-4":{

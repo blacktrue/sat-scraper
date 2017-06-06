@@ -19,6 +19,7 @@ class SATScraper
 {
     const SAT_CREDENTIAL_ERROR = 'El RFC o CIEC son incorrectos';
     const SAT_URL_LOGIN = 'https://cfdiau.sat.gob.mx//nidp/app/login?id=20&sid=1&option=credential&sid=1';
+    const SAT_URL_CAPTCHA = 'https://cfdiau.sat.gob.mx/nidp/jcaptcha.jpg';
     const SAT_HOST_CFDI_AUTH = 'cfdiau.sat.gob.mx';
     const SAT_HOST_PORTAL_CFDI = 'portalcfdi.facturaelectronica.sat.gob.mx';
     const SAT_URL_PORTAL_CFDI = 'https://portalcfdi.facturaelectronica.sat.gob.mx/';
@@ -537,7 +538,7 @@ class SATScraper
                 $temp['efectoComprobante'] = trim($tds[10]->children(0)->text());
                 $temp['estadoComprobante'] = trim($tds[11]->children(0)->text());
                 $temp['fechaCancelacion'] = $this->tipoDescarga == 'recibidos' ? trim($tds[12]->children(0)->text()) : '';
-                $temp['urlXml'] = str_replace(["return AccionCfdi('", "','Recuperacion');"], [self::SAT_URL_PORTAL_CFDI, ''], @$tds[0]->children(0)->find('.BtnDescarga',0)->onclick);
+                $temp['urlXml'] = str_replace(["return AccionCfdi('", "','Recuperacion');"], [self::SAT_URL_PORTAL_CFDI, ''], @$tds[0]->children(0)->find('.BtnDescarga', 0)->onclick);
 
                 $this->data[$temp['uuid']] = $temp;
             }
@@ -563,18 +564,13 @@ class SATScraper
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
-    public function getRequests() : array
+    public function getRequests() : \Generator
     {
-        $requests = [];
         foreach ($this->getData() as $uuid => $data) {
-            if ($data['urlXml'] != 'CANCELADO') {
-                $requests[] = $data['urlXml'];
-            }
+            yield $data['urlXml'];
         }
-
-        return $requests;
     }
 
     /**
