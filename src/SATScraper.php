@@ -562,18 +562,13 @@ class SATScraper
     }
 
     /**
-     * @return array
+     * @return \Generator
      */
     public function getRequests()
     {
-        $requests = [];
         foreach ($this->getData() as $uuid => $data) {
-            if ($data['urlXml'] !== 'CANCELADO') {
-                $requests[] = $data['urlXml'];
-            }
+            yield $data['urlXml'];
         }
-
-        return $requests;
     }
 
     /**

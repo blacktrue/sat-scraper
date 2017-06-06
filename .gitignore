@@ -2,3 +2,4 @@
 /vendor/
 process.php
 composer.lock
+**/.DS_Store
