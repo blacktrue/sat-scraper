@@ -50,7 +50,7 @@ class DownloadXML
      */
     protected function makePromises()
     {
-        foreach ($this->satScraper->getRequests() as $link) {
+        foreach ($this->satScraper->getUrls() as $link) {
             yield $this->satScraper->getClient()->requestAsync('GET', $link, [
                 'future' => true,
                 'verify' => false,
