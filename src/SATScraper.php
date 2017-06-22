@@ -566,7 +566,7 @@ class SATScraper
     /**
      * @return \Generator
      */
-    public function getRequests() : \Generator
+    public function getUrls() : \Generator
     {
         foreach ($this->getData() as $uuid => $data) {
             yield $data['urlXml'];

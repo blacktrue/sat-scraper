@@ -37,7 +37,7 @@ class DownloadXML
     public function download(Closure $callback)
     {
         $promises = (function () {
-            foreach ($this->satScraper->getRequests() as $link) {
+            foreach ($this->satScraper->getUrls() as $link) {
                 yield $this->satScraper->getClient()->requestAsync('GET', $link, [
                     'future' => true,
                     'verify' => false,
