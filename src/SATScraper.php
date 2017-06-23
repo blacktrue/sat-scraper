@@ -63,6 +63,11 @@ class SATScraper
     protected $onFiveHundred = null;
 
     /**
+     * @var string
+     */
+    protected $loginUrl;
+
+    /**
      * SATScraper constructor.
      *
      * @param array $options
@@ -76,6 +81,7 @@ class SATScraper
         $this->ciec = $options['ciec'];
         $this->tipoDescarga = isset($options['tipoDescarga']) ? $options['tipoDescarga'] : 'recibidos';
         $this->cancelados = isset($options['cancelados']) ? $options['cancelados'] : false;
+        $this->loginUrl = isset($options['loginUrl']) ? $options['loginUrl'] : URLS::SAT_URL_LOGIN;
         $this->client = new Client();
         $this->cookie = new CookieJar();
         $this->init();
@@ -102,7 +108,7 @@ class SATScraper
      */
     private function login()
     {
-        $response = $this->client->post(URLS::SAT_URL_LOGIN, [
+        $response = $this->client->post($this->loginUrl, [
             'future' => true,
             'verify' => false,
             'cookies' => $this->cookie,
