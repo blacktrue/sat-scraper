@@ -21,7 +21,8 @@ $satScraper = new SATScraper([
     'rfc' => 'XAXX010101000',
     'ciec' => '123456',
     'tipoDescarga' => 'recibidos',//emitidos
-    'cancelados' => true,//false
+    'cancelados' => true,//false,
+    //'loginUrl' => '' //Opcional para sobreescribir la url del login
 ]);
 
 $satScraper->downloadPeriod(2016,7,1,2016,7,1);
