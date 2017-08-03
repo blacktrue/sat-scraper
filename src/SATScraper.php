@@ -539,6 +539,9 @@ class SATScraper
             }
         }
 
+        $dom->clear();
+        unset($dom);
+
         return $numberOfElements;
     }
 
