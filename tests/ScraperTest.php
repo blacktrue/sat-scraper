@@ -6,13 +6,14 @@ class ScraperTest extends \PHPUnit\Framework\TestCase
     {
         $credentials = require 'credentials.php';
 
-        $this->expectException(\Blacktrue\Scraping\Exceptions\SATException::class);
+        $this->expectException(\Blacktrue\Scraping\Exceptions\SATCredentialsException::class);
 
-        $scraper = new \Blacktrue\Scraping\SATScraper([
+        new \Blacktrue\Scraping\SATScraper([
             'rfc' => $credentials['rfc'],
             'ciec' => $credentials['ciec'].'2',
             'tipoDescarga' => 'recibidos',
-            'cancelados' => false
+            'cancelados' => false,
+            'loginUrl' => $credentials['loginUrl']
         ]);
 
     }
@@ -25,30 +26,11 @@ class ScraperTest extends \PHPUnit\Framework\TestCase
             'rfc' => $credentials['rfc'],
             'ciec' => $credentials['ciec'],
             'tipoDescarga' => 'recibidos',
-            'cancelados' => false
+            'cancelados' => false,
+            'loginUrl' => $credentials['loginUrl']
         ]);
 
         $this->assertInstanceOf(\Blacktrue\Scraping\SATScraper::class, $scraper);
-
-    }
-
-    public function testEmptyData()
-    {
-        $credentials = require 'credentials.php';
-
-        $scraper = new \Blacktrue\Scraping\SATScraper([
-            'rfc' => $credentials['rfc'],
-            'ciec' => $credentials['ciec'],
-            'tipoDescarga' => 'recibidos',
-            'cancelados' => false
-        ]);
-
-        $scraper->downloadPeriod(
-            ...$credentials['dates_empty']['fecha_inicial'],
-            ...$credentials['dates_empty']['fecha_final']
-        );
-
-        $this->assertEquals([], $scraper->getData());
 
     }
 
@@ -60,7 +42,8 @@ class ScraperTest extends \PHPUnit\Framework\TestCase
             'rfc' => $credentials['rfc'],
             'ciec' => $credentials['ciec'],
             'tipoDescarga' => 'recibidos',
-            'cancelados' => false
+            'cancelados' => false,
+            'loginUrl' => $credentials['loginUrl']
         ]);
 
         $scraper->downloadPeriod(
@@ -93,7 +76,8 @@ class ScraperTest extends \PHPUnit\Framework\TestCase
             'rfc' => $credentials['rfc'],
             'ciec' => $credentials['ciec'],
             'tipoDescarga' => 'recibidos',
-            'cancelados' => false
+            'cancelados' => false,
+            'loginUrl' => $credentials['loginUrl']
         ]);
 
         $scraper->downloadPeriod(

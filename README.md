@@ -22,7 +22,7 @@ $satScraper = new SATScraper([
     'ciec' => '123456',
     'tipoDescarga' => 'recibidos',//emitidos
     'cancelados' => true,//false,
-    //'loginUrl' => '' //Opcional para sobreescribir la url del login
+    //'loginUrl' => 'https://cfdiau.sat.gob.mx/nidp/app/login?id=4&sid=1&option=credential' //Opcional para sobreescribir la url del login
 ]);
 
 $satScraper->downloadPeriod(2016,7,1,2016,7,1);
@@ -40,12 +40,13 @@ $satScraper->downloadListUUID([
 print_r($satScraper->getData());
 ```
 
-## Probar credenciales
+## Excepciones
 ```php
 require "vendor/autoload.php";
 
 use Blacktrue\Scraping\SATScraper;
-use Blacktrue\Scraping\Exceptions\SATException;
+use Blacktrue\Scraping\Exceptions\SATCredentialsException;
+use Blacktrue\Scraping\Exceptions\SATAuthenticatedException;
 
 try{
     $satScraper = new SATScraper([
@@ -54,7 +55,9 @@ try{
         'tipoDescarga' => 'recibidos',//emitidos
         'cancelados' => true,//false
     ]);
-}catch(Blacktrue\Scraping\Exceptions\SATException $e){
+}catch(SATCredentialsException $e){ //Error de credenciales
+    echo $e->getMessage();
+}catch(SATAuthenticatedException $e){ //Error en login, posible cambio en metodo de login
     echo $e->getMessage();
 }
 

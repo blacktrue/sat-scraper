@@ -2,8 +2,11 @@
 
 namespace Blacktrue\Scraping;
 
+use Blacktrue\Scraping\Exceptions\SATAuthenticatedException;
+use Blacktrue\Scraping\Exceptions\SATCredentialsException;
 use Blacktrue\Scraping\Exceptions\SATException;
 use Blacktrue\Scraping\Contracts\Filters;
+use GuzzleHttp\Exception\ClientException;
 use Sunra\PhpSimple\HtmlDomParser;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Client;
@@ -90,7 +93,7 @@ class SATScraper
     /**
      * @return $this
      *
-     * @throws SATException
+     * @throws SATCredentialsException
      */
     protected function init()
     {
@@ -104,7 +107,7 @@ class SATScraper
     /**
      * @return string
      *
-     * @throws SATException
+     * @throws SATCredentialsException
      */
     private function login()
     {
@@ -124,8 +127,8 @@ class SATScraper
             ],
         ])->getBody()->getContents();
 
-        if (strpos($response, '<META HTTP-EQUIV="expires" CONTENT="0">') === false) {
-            throw new SATException(self::SAT_CREDENTIAL_ERROR);
+        if (strpos($response, 'document.forms[0].submit();') !== false) {
+            throw new SATCredentialsException(self::SAT_CREDENTIAL_ERROR);
         }
 
         return $response;
@@ -148,20 +151,25 @@ class SATScraper
 
     /**
      * @param array $inputs
-     *
      * @return array
+     *
+     * @throws SATAuthenticatedException
      */
     public function postDataAuth(array $inputs)
     {
-        $response = $this->client->post(URLS::SAT_URL_WSFEDERATION, [
-            'future' => true,
-            'cookies' => $this->cookie,
-            'verify' => false,
-            'form_params' => $inputs,
-        ])->getBody()->getContents();
-        $inputs = $this->parseInputs($response);
+        try {
+            $response = $this->client->post(URLS::SAT_URL_WSFEDERATION, [
+                'future' => true,
+                'cookies' => $this->cookie,
+                'verify' => false,
+                'form_params' => $inputs,
+            ])->getBody()->getContents();
+            $inputs = $this->parseInputs($response);
 
-        return $inputs;
+            return $inputs;
+        } catch (ClientException $e) {
+            throw new SATAuthenticatedException("Error al autenticar al usuario, posible cambio en el metodo");
+        }
     }
 
     /**
@@ -268,7 +276,7 @@ class SATScraper
                 $dateCurrent = strtotime(date('Y-m-d', $dateNow));
             }
         } else {
-            throw new SATException('Las fechas finales no pueden ser menor a las iniciales');
+            throw new SATException('Las fechas finales no pueden ser menores a las iniciales');
         }
     }
 
