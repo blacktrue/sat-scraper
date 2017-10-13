@@ -21,7 +21,7 @@ $satScraper = new SATScraper([
     'rfc' => 'XAXX010101000',
     'ciec' => '123456',
     'tipoDescarga' => 'recibidos',//emitidos
-    'cancelados' => true,//false,
+    'cancelados' => true,//false, * todos,
     //'loginUrl' => 'https://cfdiau.sat.gob.mx/nidp/app/login?id=4&sid=1&option=credential' //Opcional para sobreescribir la url del login
 ]);
 

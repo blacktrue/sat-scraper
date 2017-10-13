@@ -240,8 +240,12 @@ class SATScraper
 
             $filters->taxId = $uuid;
 
-            if ($this->cancelados == true) {
+            if ($this->cancelados !== '*' && $this->cancelados === true) {
                 $filters->stateVoucher = '0';
+            }
+
+            if ($this->cancelados === '*') {
+                $filters->stateVoucher = '-1';
             }
 
             $html = $this->runQueryDate($filters);
@@ -262,14 +266,14 @@ class SATScraper
     public function downloadPeriod($startYear, $startMonth, $startDay, $endYear, $endMonth, $endDay)
     {
         if ($endYear >= $startYear && $endMonth >= $startMonth) {
-            $dateCurrent = strtotime($startDay.'-'.$startMonth.'-'.$startYear.'00:00:00');
-            $endDate = strtotime($endDay.'-'.$endMonth.'-'.$endYear.'00:00:00');
+            $dateCurrent = strtotime($startDay . '-' . $startMonth . '-' . $startYear . '00:00:00');
+            $endDate = strtotime($endDay . '-' . $endMonth . '-' . $endYear . '00:00:00');
             $this->data = [];
 
             while ($dateCurrent <= $endDate) {
                 list($pYear, $pMonth, $pDay) = explode('-', date('Y-m-d', $dateCurrent));
 
-                $this->downloadDay((int) $pYear, (int) $pMonth, (int) $pDay);
+                $this->downloadDay((int)$pYear, (int)$pMonth, (int)$pDay);
 
                 $dateCurrent1 = date('Y-m-d', $dateCurrent);
                 $dateNow = strtotime('+1 day', strtotime($dateCurrent1));
@@ -293,7 +297,7 @@ class SATScraper
         $totalRecords = 0;
 
         while ($queryStop === false) {
-            $result = $this->downloadSeconds((int) $year, (int) $month, (int) $day, (int) $secondInitial, (int) $secondEnd);
+            $result = $this->downloadSeconds((int)$year, (int)$month, (int)$day, (int)$secondInitial, (int)$secondEnd);
 
             if ($result >= 500 && !is_null($this->onFiveHundred) && is_callable($this->onFiveHundred)) {
                 $params = [
@@ -308,19 +312,19 @@ class SATScraper
             }
 
             if ($result < 500 && $result !== '-1') {
-                $totalRecords = (int) $totalRecords + $result;
+                $totalRecords = (int)$totalRecords + $result;
                 if ($secondEnd == 86400) {
                     $queryStop = true;
                 }
                 if ($secondEnd < 86400) {
-                    $secondInitial = (int) $secondEnd + 1;
+                    $secondInitial = (int)$secondEnd + 1;
                     $secondEnd = 86400;
                 }
             } else {
                 if ($secondEnd > $secondInitial) {
                     $secondEnd = floor($secondInitial + (($secondEnd - $secondInitial) / 2));
                 } elseif ($secondEnd <= $secondInitial) {
-                    $totalRecords = (int) $totalRecords + $result;
+                    $totalRecords = (int)$totalRecords + $result;
                     if ($secondEnd == 86400) {
                         $queryStop = true;
                     } elseif ($secondEnd < 86400) {
@@ -366,8 +370,12 @@ class SATScraper
         $filters->minute_end = $time_end[1];
         $filters->second_end = $time_end[2];
 
-        if ($this->cancelados == true) {
+        if ($this->cancelados !== '*' && $this->cancelados === true) {
             $filters->stateVoucher = '0';
+        }
+
+        if ($this->cancelados === '*') {
+            $filters->stateVoucher = '-1';
         }
 
         $html = $this->runQueryDate($filters);
@@ -481,8 +489,8 @@ class SATScraper
     }
 
     /**
-     * @param string  $html
-     * @param array   $inputs
+     * @param string $html
+     * @param array $inputs
      * @param Filters $filters
      *
      * @return array
