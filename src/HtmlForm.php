@@ -73,6 +73,10 @@ class HtmlForm
         foreach ($xpath as $input) {
             $name = (string) $input->attributes()->{'name'};
             $value = (string) $input->attributes()->{'value'};
+            if (preg_match('!!u', $value)) {
+                $value = utf8_decode($value);
+            }
+
             $inputValues[$name] = $value;
         }
 
